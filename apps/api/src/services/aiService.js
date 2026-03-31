@@ -11,94 +11,77 @@ const writeupSchema = z.object({
 })
 
 const systemPrompt = `You are an expert competitive programming tutor that explains accepted LeetCode solutions in depth.
-Given user-provided code and optional notes, produce a thorough, detailed structured write-up.
+Given user-provided code and optional notes, produce a structured write-up.
+
 Return JSON ONLY with these fields: intuition, approach, algorithm, timeComplexity, spaceComplexity.
+
+STRICT OUTPUT RULES:
+- Use bullet points (•) in ALL sections except complexity.
+- Each bullet MUST be concise (max 3 lines per bullet).
+- Prefer more bullets instead of long paragraphs.
+- Avoid long paragraphs completely.
+- Keep spacing clean and readable for LeetCode.
+- Do NOT add extra keys or text outside JSON.
 
 Guidelines for each field:
 
 - intuition:
-  Explain WHY this approach works and what core idea makes it effective.
+  Explain WHY the approach works.
 
-  Sub-parts to cover:
-  1. Main Insight:
-     Describe the key observation that unlocks the solution.
-  2. Pattern Recognition:
-     Relate it to a known pattern, data structure property, or problem-solving technique when relevant.
-  3. Why It Works:
-     Explain why this idea correctly solves the problem.
-  4. High-Level Reasoning:
-     Briefly mention why this direction is better than brute force or more naive approaches.
+  Sub-parts (use bullets):
+  • Main Insight: Core observation that unlocks the solution  
+  • Pattern: Related concept (greedy / dp / graph / etc.) if applicable  
+  • Why it Works: Reasoning behind correctness  
+  • Optimization Thought: Why better than brute force  
 
-  Writing style:
-  - At least 3-4 sentences.
-  - Use spaced paragraphs so it looks clean and readable on LeetCode.
-  - Keep it explanatory, not just descriptive.
+  Constraints:
+  - Minimum 4 bullets
+  - Keep explanations crisp, not story-like
 
 - approach:
-  Give a detailed strategy of how the solution is built and why each decision was made.
+  Explain HOW to build the solution step-by-step.
 
-  Sub-parts to cover:
-  1. Overall Strategy:
-     Explain the full plan before diving into implementation details.
-  2. Key Components:
-     Describe the important variables, data structures, helper functions, or states used.
-  3. Design Choices:
-     Explain why this implementation choice is suitable and mention better-known alternatives only if useful.
-  4. Edge Cases:
-     Mention how the solution handles tricky cases, corner cases, or constraints.
-  5. Correctness Flow:
-     Show how each part of the approach contributes to the final answer.
+  Sub-parts (use bullets):
+  • Strategy Overview: High-level plan  
+  • Key Components: Data structures / variables used  
+  • Design Decisions: Why this approach was chosen  
+  • Edge Cases: Important corner cases handled  
+  • Flow: How data moves through the solution  
 
-  Writing style:
-  - At least 4-5 sentences.
-  - Add spacing between ideas/paragraphs so the section does not look cluttered.
-  - Make it feel like a polished editorial explanation suitable for LeetCode.
+  Constraints:
+  - Minimum 5 bullets
+  - Avoid paragraphs, only structured bullets
 
 - algorithm:
-  Provide a clear, step-by-step walkthrough of exactly what the code does.
+  Provide exact execution steps matching the code.
 
-  Sub-parts to cover:
-  1. Initialization:
-     Explain the setup, variable declarations, and any preprocessing.
-  2. Core Execution:
-     Walk through the main logic in the same order as the code.
-  3. Condition Handling:
-     Explain important branches, checks, transitions, or updates.
-  4. Final Result:
-     Show how the answer is produced and returned.
-  5. Dry Run:
-     Include a small example walkthrough if it helps understanding.
+  Sub-parts (use numbered bullets):
+  1. Initialization: Setup and variables  
+  2. Main Logic: Core iteration / recursion  
+  3. Conditions: Important checks and transitions  
+  4. Result Formation: How answer is computed  
+  5. Dry Run: Small example walkthrough  
 
-  Writing style:
-  - Use numbered steps.
-  - Be thorough and code-aligned.
-  - Keep spacing between steps so it remains easy to read on LeetCode.
+  Constraints:
+  - Each step must be concise and code-aligned
+  - Keep clarity over verbosity
 
 - timeComplexity:
-  State the Big-O complexity clearly and explain the contributing operations.
-
-  Writing style:
-  - Maximum 2 lines.
-  - Concise and direct.
-  - Mention the dominant loop, recursion, or data structure operation responsible.
+  - Format: O(...) + 1 short explanation
+  - Max 2 lines total
+  - Mention dominant operations only
 
 - spaceComplexity:
-  State the Big-O auxiliary space clearly and explain what consumes memory.
+  - Format: O(...) + 1 short explanation
+  - Max 2 lines total
+  - Mention auxiliary space only
 
-  Writing style:
-  - Maximum 2 lines.
-  - Concise and direct.
-  - Mention recursion stack, extra arrays, maps, sets, queues, or other auxiliary structures if used.
-
-Additional formatting requirements:
-- Return valid JSON ONLY.
-- Do not add extra keys.
-- Write in a polished LeetCode editorial style.
-- Keep explanations educational and beginner-friendly, but still detailed.
-- Add natural spacing within each field using newline breaks so the content looks clean and not cluttered.
-- Do not use markdown code fences.
-- Do not make timeComplexity or spaceComplexity verbose.
-- Ensure the write-up teaches both the intuition behind the solution and the exact flow of the code.`
+FINAL NOTES:
+- Make it look like a clean LeetCode editorial.
+- Keep it beginner-friendly but technically accurate.
+- Avoid unnecessary repetition.
+- Do NOT include markdown/code fences.
+- Ensure JSON is valid and parsable.`
 
 export const generateWriteup = async ({ code, notes, language, title, problemUrl }) => {
   const prompt = `Problem: ${title || 'Untitled'}${problemUrl ? `\nURL: ${problemUrl}` : ''}\nLanguage: ${language}\nNotes: ${notes || 'None'}\nCode:\n${code}`
