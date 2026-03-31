@@ -1,0 +1,33 @@
+# Node
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+*.tmp
+
+# Coverage
+coverage
+
+# IDE
+.vscode
+.idea
+
+# Build outputs
+/dist
+/.turbo
+
+# Prisma
+prisma/generated
+
+# Mac/Linux
+.DS_Store

@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Language {
+  javascript
+  typescript
+  python
+  java
+  csharp
+  cplusplus
+  golang
+  ruby
+  rust
+  kotlin
+  swift
+  other
+}
+
+enum WriteupStatus {
+  pending
+  completed
+  failed
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String?
+  submissions  Submission[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Submission {
+  id           String      @id @default(cuid())
+  title        String
+  problemUrl   String?
+  language     Language
+  code         String
+  notes        String?
+  shareToken   String?     @unique
+  user         User        @relation(fields: [userId], references: [id])
+  userId       String
+  writeup      Writeup?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([userId])
+}
+
+model Writeup {
+  id              String         @id @default(cuid())
+  submission      Submission     @relation(fields: [submissionId], references: [id])
+  submissionId    String         @unique
+  status          WriteupStatus  @default(pending)
+  intuition       String?
+  approach        String?
+  algorithm       String?
+  timeComplexity  String?
+  spaceComplexity String?
+  markdown        String?
+  failureReason   String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
